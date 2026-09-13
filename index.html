@@ -4,7 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>صحت خیری سروس</title>
-<script src="https://cdn.jsdelivr.net/npm/jitsi-meet@latest/external_api.js"></script>
+<!-- Official Jitsi External API -->
+<script src="https://meet.jit.si/external_api.js"></script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family: 'Arial', 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height:100vh; direction:rtl; }
@@ -25,6 +26,7 @@ button:hover { background:#764ba2; }
 .form-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
 @media (max-width:768px) { .form-row { grid-template-columns:1fr; } }
 .warning { background:#fff3cd; color:#856404; padding:10px; border-radius:5px; margin:10px 0; }
+#jitsi-container { margin-top:20px; width:100%; height:600px; background:#000; border-radius:10px; overflow:hidden; }
 </style>
 </head>
 <body>
@@ -42,6 +44,7 @@ button:hover { background:#764ba2; }
 <button class="tab-btn" onclick="showTab('dashboard')">ڈیش بورڈ</button>
 </div>
 
+<!-- Doctor Registration -->
 <div id="doctor-register" class="tab-content active">
 <h2>ڈاکٹر رجسٹریشن</h2>
 <div class="warning">⚠️ نوٹ: یہ ڈیمو ورژن ہے</div>
@@ -68,6 +71,7 @@ button:hover { background:#764ba2; }
 </form>
 </div>
 
+<!-- Patient Registration -->
 <div id="patient-register" class="tab-content">
 <h2>مریض رجسٹریشن</h2>
 <form onsubmit="registerPatient(event)">
@@ -83,6 +87,7 @@ button:hover { background:#764ba2; }
 </form>
 </div>
 
+<!-- Doctor Login -->
 <div id="doctor-login" class="tab-content">
 <h2>ڈاکٹر لاگ ان</h2>
 <form onsubmit="loginDoctor(event)">
@@ -92,16 +97,18 @@ button:hover { background:#764ba2; }
 </form>
 </div>
 
+<!-- Video Call -->
 <div id="video-call" class="tab-content">
 <h2>ویڈیو کال</h2>
 <div style="margin-bottom:15px;">
     <label>Room Name:</label>
-    <input type="text" id="room-name" value="sehatkhairi-room" style="margin-bottom:10px;">
+    <input type="text" id="room-name" value="sehatkhairi-main-room" style="margin-bottom:10px;">
 </div>
 <button onclick="startVideoCall()">Start Video Call</button>
-<div id="jitsi-container" style="margin-top:20px; width:100%; height:600px; border-radius:10px; overflow:hidden;"></div>
+<div id="jitsi-container"></div>
 </div>
 
+<!-- Dashboard -->
 <div id="dashboard" class="tab-content">
 <h2>ڈیش بورڈ</h2>
 <p>رجسٹرڈ ڈاکٹرز: <span id="doctor-count">0</span></p>
@@ -112,6 +119,7 @@ button:hover { background:#764ba2; }
 <script>
 let doctors = JSON.parse(localStorage.getItem('doctors')) || [];
 let patients = JSON.parse(localStorage.getItem('patients')) || [];
+let jitsiApi = null;
 
 function showTab(tab) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
@@ -169,7 +177,7 @@ function startVideoCall() {
   const container = document.getElementById('jitsi-container');
   container.innerHTML = '';
 
-  const roomName = document.getElementById('room-name').value || 'sehatkhairi-' + Date.now();
+  const roomName = document.getElementById('room-name').value.trim() || 'sehatkhairi-room-' + Math.floor(Math.random() * 1000);
 
   const options = {
     roomName: roomName,
@@ -179,10 +187,17 @@ function startVideoCall() {
     configOverwrite: {
       startWithAudioMuted: false,
       startWithVideoMuted: false
+    },
+    interfaceConfigOverwrite: {
+      SHOW_JITSI_WATERMARK: false
     }
   };
 
-  new JitsiMeetExternalAPI('meet.jit.si', options);
+  if (window.JitsiMeetExternalAPI) {
+    jitsiApi = new JitsiMeetExternalAPI('meet.jit.si', options);
+  } else {
+    alert('Jitsi library is still loading. Please make sure you have an internet connection and try again.');
+  }
 }
 
 function updateDashboard() {
@@ -193,3 +208,4 @@ updateDashboard();
 </script>
 </body>
 </html>
+
