@@ -18,207 +18,183 @@ body { font-family: 'Arial', 'Segoe UI', sans-serif; background: linear-gradient
 .tab-content.active { display:block; }
 .form-group { margin-bottom:20px; }
 label { display:block; margin-bottom:8px; color:#333; font-weight:bold; }
-input, select { width:100%; padding:12px; border:2px solid #ddd; border-radius:5px; font-size:1em; direction:rtl; }
+input, select, textarea { width:100%; padding:12px; border:2px solid #ddd; border-radius:5px; font-size:1em; direction:rtl; font-family: inherit; }
 button { background:#667eea; color:white; padding:15px 30px; border:none; border-radius:5px; cursor:pointer; font-size:1.1em; font-weight:bold; width:100%; }
 button:hover { background:#764ba2; }
 .form-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
 @media (max-width:768px) { .form-row { grid-template-columns:1fr; } }
-.card { border:1px solid #e2e8f0; border-radius:8px; padding:15px; margin-bottom:15px; background:#f8fafc; }
-.btn-whatsapp { background:#25D366; color:white; margin-top:10px; }
-.btn-whatsapp:hover { background:#1eb954; }
-.btn-call { background:#007bff; color:white; margin-top:10px; }
-.btn-call:hover { background:#0056b3; }
-.info-note { background:#ebf8ff; border-right:4px solid #3182ce; padding:12px; margin-bottom:15px; border-radius:4px; color:#2b6cb0; font-size:0.95em; line-height:1.6; }
+.card { border:1px solid #e2e8f0; border-radius:8px; padding:15px; margin-bottom:15px; background:#f8fafc; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+.btn-whatsapp { background:#25D366; color:white; margin-top:10px; border:none; }
+.btn-call { background:#007bff; color:white; margin-top:10px; border:none; }
+.info-note { background:#ebf8ff; border-right:4px solid #3182ce; padding:12px; margin-bottom:15px; border-radius:4px; color:#2b6cb0; font-size:0.95em; }
+.badge { display:inline-block; padding:4px 8px; background:#edf2f7; border-radius:4px; font-size:0.85em; margin-bottom:5px; }
 </style>
 </head>
 <body>
 <div class="container">
 <div class="header">
 <h1>🏥 صحت خیری سروس</h1>
-<p>غریب مریضوں کو مفت ڈاکٹری مشورہ اور رابطہ</p>
+<p>مریضوں اور ڈاکٹروں کے درمیان مفت طبی رابطہ</p>
 </div>
 
 <div class="tabs">
-<button class="tab-btn active" onclick="showTab('doctor-register')">ڈاکٹر رجسٹریشن</button>
-<button class="tab-btn" onclick="showTab('patient-register')">مریض رجسٹریشن</button>
-<button class="tab-btn" onclick="showTab('doctors-list')">دستیاب ڈاکٹرز (رابطہ کریں)</button>
+<button class="tab-btn active" onclick="showTab('patient-register')">مریض رجسٹریشن</button>
+<button class="tab-btn" onclick="showTab('doctors-list')">ڈاکٹرز سے رابطہ</button>
+<button class="tab-btn" onclick="showTab('patients-list')">مریضوں کی فہرست (ڈاکٹرز کے لیے)</button>
+<button class="tab-btn" onclick="showTab('doctor-register')">ڈاکٹر رجسٹریشن</button>
 <button class="tab-btn" onclick="showTab('video-call')">آن لائن ویڈیو کال</button>
-<button class="tab-btn" onclick="showTab('dashboard')">ڈیش بورڈ</button>
-</div>
-
-<!-- Doctor Registration -->
-<div id="doctor-register" class="tab-content active">
-<h2>ڈاکٹر رجسٹریشن (Doctor Registration)</h2>
-<form onsubmit="registerDoctor(event)">
-<div class="form-row">
-<div class="form-group"><label>ڈاکٹر کا نام (Doctor Name)</label><input type="text" id="doc-name" required placeholder="مثال: ڈاکٹر محمد احمد"></div>
-<div class="form-group"><label>ای میل (Email)</label><input type="email" id="doc-email" required placeholder="doctor@example.com"></div>
-</div>
-<div class="form-row">
-<div class="form-group"><label>واٹس ایپ / فون نمبر (بین الاقوامی کوڈ کے ساتھ جیسے: +1... یا +92...)</label><input type="tel" id="doc-phone" required placeholder="+1234567890"></div>
-<div class="form-group"><label>تخصص (Specialty)</label>
-<select id="doc-specialty" required>
-<option value="عام معالج (General Physician)">عام معالج (General Physician)</option>
-<option value="امراض قلب (Cardiologist)">امراض قلب (Cardiologist)</option>
-<option value="بچوں کے امراض (Pediatrician)">بچوں کے امراض (Pediatrician)</option>
-<option value="ماہر نفسیات (Psychiatrist)">ماہر نفسیات (Psychiatrist)</option>
-</select>
-</div>
-</div>
-<div class="form-row">
-<div class="form-group"><label>پاس ورڈ (Password)</label><input type="password" id="doc-password" required minlength="6"></div>
-<div class="form-group"><label>پاس ورڈ دوبارہ (Confirm Password)</label><input type="password" id="doc-password-confirm" required></div>
-</div>
-<button type="submit">ڈاکٹر رجسٹر کریں</button>
-</form>
 </div>
 
 <!-- Patient Registration -->
-<div id="patient-register" class="tab-content">
+<div id="patient-register" class="tab-content active">
 <h2>مریض رجسٹریشن (Patient Registration)</h2>
+<div class="info-note">مریض اپنی معلومات درج کریں تاکہ ڈاکٹر آپ سے رابطہ کر سکیں۔</div>
 <form onsubmit="registerPatient(event)">
 <div class="form-row">
-<div class="form-group"><label>مریض کا نام (Patient Name)</label><input type="text" id="pat-name" required></div>
-<div class="form-group"><label>عمر (Age)</label><input type="number" id="pat-age" required></div>
+<div class="form-group"><label>مریض کا نام</label><input type="text" id="pat-name" required placeholder="مثال: محمد علی"></div>
+<div class="form-group"><label>عمر</label><input type="number" id="pat-age" required placeholder="25"></div>
 </div>
 <div class="form-row">
-<div class="form-group"><label>فون نمبر (Phone Number)</label><input type="tel" id="pat-phone" required placeholder="+1234567890"></div>
-<div class="form-group"><label>بیماری کی مختصر تفصیل (Problem)</label><input type="text" id="pat-issue" placeholder="بخار، کھانسی وغیرہ"></div>
+<div class="form-group"><label>فون / واٹس ایپ نمبر (بشمول ملک کا کوڈ)</label><input type="tel" id="pat-phone" required placeholder="+923001234567"></div>
+<div class="form-group"><label>شہر</label><input type="text" id="pat-city" required placeholder="کراچی"></div>
 </div>
-<button type="submit">مریض رجسٹر کریں</button>
+<div class="form-group"><label>بیماری کی تفصیل (Symptoms)</label><textarea id="pat-issue" rows="3" placeholder="اپنی تکلیف یہاں لکھیں..."></textarea></div>
+<button type="submit">درخواست جمع کروائیں</button>
 </form>
 </div>
 
-<!-- Doctors List & Direct Contact -->
+<!-- Doctors List for Patients -->
 <div id="doctors-list" class="tab-content">
-<h2>دستیاب ڈاکٹرز کی فہرست</h2>
-<div class="info-note">
-مریض یہاں سے ڈاکٹر کو براہ راست واٹس ایپ کال یا ڈائریکٹ فون کال کر سکتے ہیں۔
+<h2>دستیاب ڈاکٹرز</h2>
+<p style="margin-bottom:15px;">مریض یہاں سے ڈاکٹر کو براہ راست کال کر سکتے ہیں۔</p>
+<div id="doctors-display"></div>
 </div>
-<div id="doctors-display">
-<!-- Dynamic list of doctors -->
+
+<!-- Patients List for Doctors -->
+<div id="patients-list" class="tab-content">
+<h2>رجسٹرڈ مریضوں کی فہرست</h2>
+<div class="info-note"><strong>ڈاکٹرز کے لیے:</strong> یہاں ان مریضوں کی تفصیلات ہیں جنہوں نے رجسٹریشن کرائی ہے۔ آپ جب چاہیں انہیں کال کر سکتے ہیں۔</div>
+<div id="patients-display"></div>
 </div>
+
+<!-- Doctor Registration -->
+<div id="doctor-register" class="tab-content">
+<h2>ڈاکٹر رجسٹریشن (Doctor Registration)</h2>
+<form onsubmit="registerDoctor(event)">
+<div class="form-row">
+<div class="form-group"><label>ڈاکٹر کا نام</label><input type="text" id="doc-name" required placeholder="ڈاکٹر احمد"></div>
+<div class="form-group"><label>تخصص (Specialty)</label>
+<select id="doc-specialty" required>
+<option value="عام معالج (GP)">عام معالج (GP)</option>
+<option value="بچوں کے ماہر (Pediatrics)">بچوں کے ماہر (Pediatrics)</option>
+<option value="دل کے ماہر (Cardiology)">دل کے ماہر (Cardiology)</option>
+<option value="جلد کے ماہر (Dermatology)">جلد کے ماہر (Dermatology)</option>
+</select>
+</div>
+</div>
+<div class="form-group"><label>فون نمبر (واٹس ایپ کے لیے)</label><input type="tel" id="doc-phone" required placeholder="+923000000000"></div>
+<button type="submit">بطور ڈاکٹر رجسٹر ہوں</button>
+</form>
 </div>
 
 <!-- Video Call Section -->
 <div id="video-call" class="tab-content">
-<h2>آن لائن ویڈیو کال روم (Jitsi Video Room)</h2>
-<div class="info-note">
-<strong>رہنمائی:</strong> جب ویڈیو کال کا نیا صفحہ کھلے تو اگر "Log In" کا آپشن آئے تو گوگل (Google) سے ایک بار لاگ ان کریں تاکہ روم شروع ہو جائے، پھر یہ روم مریض کے ساتھ شیئر کریں۔
-</div>
-<div class="form-group">
-<label>روم کا نام (Room Name):</label>
-<input type="text" id="custom-room" value="sehat-khairi-consultation" style="direction:ltr; text-align:left;">
-</div>
-<button onclick="launchVideoRoom()" class="btn-call">ویڈیو روم میں داخل ہوں (Enter Video Room)</button>
-<button onclick="shareRoomLink()" style="margin-top:10px; background:#4a5568;">لنک کاپی کریں (Copy Link to Share)</button>
+<h2>آن لائن ویڈیو کال</h2>
+<div class="info-note">روم کا نام درج کر کے کال شروع کریں، اور لنک کاپی کر کے دوسرے کو بھیج دیں۔</div>
+<input type="text" id="room-name" value="sehat-khairi-room" style="margin-bottom:15px; text-align:center;">
+<button onclick="openVideoCall()" style="background:#28a745;">ویڈیو کال شروع کریں (Open Jitsi)</button>
 </div>
 
-<!-- Dashboard -->
-<div id="dashboard" class="tab-content">
-<h2>ڈیش بورڈ (Dashboard)</h2>
-<p style="font-size:1.2em; margin-bottom:10px;">رجسٹرڈ ڈاکٹرز: <strong id="doctor-count">0</strong></p>
-<p style="font-size:1.2em;">رجسٹرڈ مریض: <strong id="patient-count">0</strong></p>
-</div>
 </div>
 
 <script>
-let doctors = JSON.parse(localStorage.getItem('doctors')) || [
-  { name: "ڈاکٹر شاہد", specialty: "عام معالج", phone: "+1234567890", email: "dr.shahid@example.com" }
-];
+// Load data from LocalStorage
+let doctors = JSON.parse(localStorage.getItem('doctors')) || [];
 let patients = JSON.parse(localStorage.getItem('patients')) || [];
 
 function showTab(tab) {
   document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
-  document.getElementById(tab).classList.add('active');
-  if (tab === 'dashboard') updateDashboard();
-  if (tab === 'doctors-list') renderDoctorsList();
-}
-
-function registerDoctor(e) {
-  e.preventDefault();
-  const pass = document.getElementById('doc-password').value;
-  const confirm = document.getElementById('doc-password-confirm').value;
-  if (pass !== confirm) { alert('پاس ورڈ مماثل نہیں ہیں!'); return; }
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
   
-  const newDoctor = {
-    name: document.getElementById('doc-name').value,
-    email: document.getElementById('doc-email').value,
-    phone: document.getElementById('doc-phone').value.replace(/[^0-9+]/g, ''),
-    specialty: document.getElementById('doc-specialty').value
-  };
-
-  doctors.push(newDoctor);
-  localStorage.setItem('doctors', JSON.stringify(doctors));
-  alert('ڈاکٹر کامیابی سے رجسٹر ہو گیا!');
-  e.target.reset();
-  showTab('doctors-list');
+  document.getElementById(tab).classList.add('active');
+  event.currentTarget.classList.add('active');
+  
+  if (tab === 'doctors-list') renderDoctors();
+  if (tab === 'patients-list') renderPatients();
 }
 
 function registerPatient(e) {
   e.preventDefault();
-  const newPatient = {
+  const patient = {
     name: document.getElementById('pat-name').value,
     age: document.getElementById('pat-age').value,
-    phone: document.getElementById('pat-phone').value,
-    issue: document.getElementById('pat-issue').value
+    phone: document.getElementById('pat-phone').value.replace(/\s/g, ''),
+    city: document.getElementById('pat-city').value,
+    issue: document.getElementById('pat-issue').value,
+    time: new Date().toLocaleString('ur-PK')
   };
-
-  patients.push(newPatient);
+  patients.unshift(patient);
   localStorage.setItem('patients', JSON.stringify(patients));
-  alert('مریض کامیابی سے رجسٹر ہو گیا!');
+  alert('آپ کی درخواست جمع ہو گئی ہے۔ ڈاکٹر جلد آپ سے رابطہ کریں گے۔');
+  e.target.reset();
+  showTab('patients-list');
+}
+
+function registerDoctor(e) {
+  e.preventDefault();
+  const doctor = {
+    name: document.getElementById('doc-name').value,
+    specialty: document.getElementById('doc-specialty').value,
+    phone: document.getElementById('doc-phone').value.replace(/\s/g, '')
+  };
+  doctors.push(doctor);
+  localStorage.setItem('doctors', JSON.stringify(doctors));
+  alert('ڈاکٹر رجسٹر ہو گئے ہیں!');
   e.target.reset();
   showTab('doctors-list');
 }
 
-function renderDoctorsList() {
-  const container = document.getElementById('doctors-display');
-  if (doctors.length === 0) {
-    container.innerHTML = '<p>ابھی کوئی ڈاکٹر رجسٹر نہیں ہے۔</p>';
-    return;
-  }
-  
-  let html = '';
-  doctors.forEach((doc, index) => {
-    const cleanPhone = doc.phone.replace(/[^0-9]/g, '');
-    html += `
+function renderDoctors() {
+  const div = document.getElementById('doctors-display');
+  div.innerHTML = doctors.length ? '' : '<p>کوئی ڈاکٹر دستیاب نہیں ہے۔</p>';
+  doctors.forEach(doc => {
+    div.innerHTML += `
       <div class="card">
         <h3>👨‍⚕️ $${doc.name}</h3>
-        <p><strong>تخصص:</strong> $${doc.specialty}</p>
-        <p><strong>فون / واٹس ایپ:</strong> $${doc.phone}</p>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
-          <a href="https://wa.me/$${cleanPhone}?text=السلام%20علیکم%20ڈاکٹر%20صاحب!%20مجھے%20طبی%20مشورہ%20چاہیے۔" target="_blank" style="flex:1; text-decoration:none;">
-            <button type="button" class="btn-whatsapp">💬 واٹس ایپ میسج / کال</button>
-          </a>
-          <a href="tel:$${doc.phone}" style="flex:1; text-decoration:none;">
-            <button type="button" class="btn-call">📞 براہ راست فون کال</button>
-          </a>
+        <span class="badge">$${doc.specialty}</span>
+        <div class="form-row">
+            <a href="https://wa.me/$${doc.phone.replace('+', '')}" target="_blank"><button class="btn-whatsapp">WhatsApp</button></a>
+            <a href="tel:$${doc.phone}"><button class="btn-call">Phone Call</button></a>
         </div>
-      </div>
-    `;
-  });
-  container.innerHTML = html;
-}
-
-function launchVideoRoom() {
-  const room = document.getElementById('custom-room').value.trim() || 'sehat-khairi-consultation';
-  window.open(`https://meet.jit.si/$${room}`, '_blank');
-}
-
-function shareRoomLink() {
-  const room = document.getElementById('custom-room').value.trim() || 'sehat-khairi-consultation';
-  const url = `https://meet.jit.si/${room}`;
-  navigator.clipboard.writeText(url).then(() => {
-    alert('ویڈیو کال کا لنک کاپی ہو گیا ہے: ' + url + '\nاب آپ یہ لنک مریض کو واٹس ایپ پر بھیج سکتے ہیں۔');
+      </div>`;
   });
 }
 
-function updateDashboard() {
-  document.getElementById('doctor-count').textContent = doctors.length;
-  document.getElementById('patient-count').textContent = patients.length;
+function renderPatients() {
+  const div = document.getElementById('patients-display');
+  div.innerHTML = patients.length ? '' : '<p>کوئی مریض رجسٹرڈ نہیں ہے۔</p>';
+  patients.forEach(pat => {
+    div.innerHTML += `
+      <div class="card">
+        <h3>👤 مریض کا نام: $${pat.name}</h3>
+        <p><strong>عمر:</strong> $${pat.age} سال | <strong>شہر:</strong> $${pat.city}</p>
+        <p><strong>تکلیف:</strong> $${pat.issue}</p>
+        <p style="font-size:0.8em; color:gray;">درج کیا گیا: $${pat.time}</p>
+        <div class="form-row">
+            <a href="https://wa.me/$${pat.phone.replace('+', '')}?text=السلام علیکم $${pat.name}! میں صحت خیری سروس سے ڈاکٹر بات کر رہا ہوں۔" target="_blank"><button class="btn-whatsapp">مریض کو واٹس ایپ کریں</button></a>
+            <a href="tel:$${pat.phone}"><button class="btn-call">مریض کو فون کال کریں</button></a>
+        </div>
+      </div>`;
+  });
 }
 
-updateDashboard();
+function openVideoCall() {
+  const room = document.getElementById('room-name').value || 'sehat-khairi';
+  window.open(`https://meet.jit.si/${room}`, '_blank');
+}
+
+// Initial Render
+renderPatients();
 </script>
 </body>
 </html>
