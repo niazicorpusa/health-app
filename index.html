@@ -3,12 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="theme-color" content="#667eea">
 <title>صحت خیری سروس</title>
-
-<!-- Link Manifest -->
-<link rel="manifest" href="manifest.json">
-
 <script src="https://cdn.jsdelivr.net/npm/jitsi-meet@latest/external_api.js"></script>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -31,7 +26,6 @@ button:hover { background:#764ba2; }
 @media (max-width:768px) { .form-row { grid-template-columns:1fr; } }
 .warning { background:#fff3cd; color:#856404; padding:10px; border-radius:5px; margin:10px 0; }
 </style>
-<script src="https://scripts.api.disqometer.com/desktop_inpage_script.js?nc=NTIwODQwMTY3MDA0MTQ1MDcxNTA4MTM="></script>
 </head>
 <body>
 <div class="container">
@@ -175,17 +169,6 @@ function updateDashboard() {
   document.getElementById('patient-count').textContent = patients.length;
 }
 updateDashboard();
-
-// Register Service Worker
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('sw.js').then(function(registration) {
-      console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }, function(err) {
-      console.log('ServiceWorker registration failed: ', err);
-    });
-  });
-}
 </script>
 </body>
 </html>
